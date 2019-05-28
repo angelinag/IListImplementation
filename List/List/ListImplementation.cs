@@ -19,7 +19,7 @@ namespace List
                 }
                 catch
                 {
-                    return 0; // todo
+                    return 0;
                 }
             }
             set
