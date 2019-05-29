@@ -5,7 +5,7 @@ using System.Text;
 
 namespace List
 {
-    class ListImplementation : IList<int>
+    public class ListImplementation : IList<int>
     {
         private int[] array;
 
@@ -19,12 +19,12 @@ namespace List
                 }
                 catch
                 {
-                    return 0;
+                    return -1;
                 }
             }
             set
             {
-                array[index] = value;
+                array[index] = value; // todo: fix array index overload
             }
         }
 
@@ -32,36 +32,25 @@ namespace List
         {
             get
             {
-                try
-                {
-                    return this.array.Length;
-                }
-                catch
-                {
-                    return 0;
-                }
+                return this.array != null ? this.array.Length : 0;
             }
         }
 
-        public bool IsReadOnly => false; //todo
+        public bool IsReadOnly => false;
 
         public void Add(int item)
         {
             if (Count == 0)
             {
-                int[] arr = new int[1] { item };
-                array = new int[1];
-                array = arr;
+                array = new int[1] { item };
             }
             else
             {
-                int newCount = Count + 1;
-                int[] arr = new int[newCount];
-                for(int i=0; i<Count; i++)
-                {
-                    arr[i] = array[i];
-                }
+                int[] arr = new int[Count + 1];
+
+                Array.Copy(array, 0, arr, 0, Count);
                 arr[Count] = item;
+
                 array = arr;
             }
         }
@@ -82,10 +71,10 @@ namespace List
 
         public void CopyTo(int[] array, int arrayIndex)
         {
+            //Array.Copy(this.array, 0, array, arrayIndex, this.array.Length);
             for (int i = 0; i < this.array.Length; i++)
             {
-                int n = arrayIndex + i;
-                array[n-1] = this.array[i];
+                array[arrayIndex + i] = this.array[i]; // Array.copy ?????????????
             }
         }
 
@@ -96,7 +85,8 @@ namespace List
 
         public int IndexOf(int item)
         {
-            if (!this.Contains(item)) throw new Exception();
+            if (!this.Contains(item))
+                throw new Exception();
             return Array.IndexOf(array, item);
         }
 
@@ -113,7 +103,7 @@ namespace List
             for (int j = nextIndex; j <= newCount; j++)
             {
                 arr[nextIndex] = array[nextIndex - 1];
-            }
+            } // todo -1. implement with copy 2. handle arrayexception as listexception
 
             array = arr;
         }
@@ -133,15 +123,8 @@ namespace List
         {
             int newCount = Count - 1;
             int[] arr = new int[newCount];
-            for (int i = 0; i < index; i++)
-            {
-                arr[i] = array[i];
-            };
-            for (int j = index; j < newCount; j++)
-            {
-                arr[j] = array[j + 1];
-            };
-
+            Array.Copy(array, 0, arr, 0, index);
+            Array.Copy(array, index + 1, arr, index, newCount - index);
             array = arr;
         }
 

@@ -14,9 +14,9 @@ C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\bin\Debug\netcoreapp2
 C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\bin\Debug\netcoreapp2.2\List.runtimeconfig.dev.json
 C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\bin\Debug\netcoreapp2.2\List.dll
 C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\bin\Debug\netcoreapp2.2\List.pdb
-C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\obj\Debug\netcoreapp2.2\List.csprojAssemblyReference.cache
 C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\obj\Debug\netcoreapp2.2\List.csproj.CoreCompileInputs.cache
 C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\obj\Debug\netcoreapp2.2\List.AssemblyInfoInputs.cache
 C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\obj\Debug\netcoreapp2.2\List.AssemblyInfo.cs
 C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\obj\Debug\netcoreapp2.2\List.dll
 C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\obj\Debug\netcoreapp2.2\List.pdb
+C:\Users\Angelina\Desktop\internship\kodar\kodar\List\List\obj\Debug\netcoreapp2.2\List.csprojAssemblyReference.cache
