@@ -9,32 +9,25 @@ namespace List
     {
         private int[] array;
 
+        public ListImplementation()
+        {
+            this.array = new int[0] { };
+        }
+
         public int this[int index]
         {
             get
             {
-                try
-                {
-                    return array[index];
-                }
-                catch
-                {
-                    return -1;
-                }
+                return (array == null) || (index >= this.array.Length) ? -1 : array[index]; // negative integer index fix
             }
             set
             {
-                array[index] = value; // todo: fix array index overload
+                if (index >= array.Length) throw new IndexOutOfRangeException();
+                array[index] = value;
             }
         }
 
-        public int Count
-        {
-            get
-            {
-                return this.array != null ? this.array.Length : 0;
-            }
-        }
+        public int Count => this.array != null ? this.array.Length : 0;
 
         public bool IsReadOnly => false;
 
@@ -71,11 +64,8 @@ namespace List
 
         public void CopyTo(int[] array, int arrayIndex)
         {
-            //Array.Copy(this.array, 0, array, arrayIndex, this.array.Length);
-            for (int i = 0; i < this.array.Length; i++)
-            {
-                array[arrayIndex + i] = this.array[i]; // Array.copy ?????????????
-            }
+            if (array.Length - arrayIndex < this.array.Length) throw new IndexOutOfRangeException();
+            Array.Copy(this.array, 0, array, arrayIndex, this.array.Length);
         }
 
         public IEnumerator<int> GetEnumerator()
@@ -86,7 +76,7 @@ namespace List
         public int IndexOf(int item)
         {
             if (!this.Contains(item))
-                throw new Exception();
+                throw new IndexOutOfRangeException();
             return Array.IndexOf(array, item);
         }
 
@@ -94,16 +84,14 @@ namespace List
         {
             int newCount = Count + 1;
             int[] arr = new int[newCount];
-            for (int i = 0; i < index - 1; i++)
-            {
-                arr[i] = array[i];
-            };
+
+            if (index > this.array.Length) throw new IndexOutOfRangeException();
+            Array.Copy(this.array, 0, arr, 0, index);
+
             arr[index] = item;
             int nextIndex = index + 1;
-            for (int j = nextIndex; j <= newCount; j++)
-            {
-                arr[nextIndex] = array[nextIndex - 1];
-            } // todo -1. implement with copy 2. handle arrayexception as listexception
+
+            Array.Copy(this.array, index, arr, nextIndex, newCount - index - 1);
 
             array = arr;
         }
