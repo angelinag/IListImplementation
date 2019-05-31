@@ -18,11 +18,11 @@ namespace List
         {
             get
             {
-                return (array == null) || (index >= this.array.Length) ? -1 : array[index]; // negative integer index fix
+                return (array == null) || (index < 0) || (index >= this.array.Length) ? -1 : array[index];
             }
             set
             {
-                if (index >= array.Length) throw new IndexOutOfRangeException();
+                if (index >= array.Length) throw new ListIndexOutOfRangeException("The selected index is out of the list range");
                 array[index] = value;
             }
         }
@@ -64,7 +64,8 @@ namespace List
 
         public void CopyTo(int[] array, int arrayIndex)
         {
-            if (array.Length - arrayIndex < this.array.Length) throw new IndexOutOfRangeException();
+            if ((array.Length - arrayIndex < this.array.Length) || (arrayIndex < 0))
+                throw new ListIndexOutOfRangeException("The selected index is out of the list range");
             Array.Copy(this.array, 0, array, arrayIndex, this.array.Length);
         }
 
@@ -76,7 +77,7 @@ namespace List
         public int IndexOf(int item)
         {
             if (!this.Contains(item))
-                throw new IndexOutOfRangeException();
+                throw new ListIndexOutOfRangeException("The selected index is out of the list range");
             return Array.IndexOf(array, item);
         }
 
@@ -85,7 +86,7 @@ namespace List
             int newCount = Count + 1;
             int[] arr = new int[newCount];
 
-            if (index > this.array.Length) throw new IndexOutOfRangeException();
+            if ((index > this.array.Length) || (index < 0)) throw new ListIndexOutOfRangeException("The selected index is out of the list range");
             Array.Copy(this.array, 0, arr, 0, index);
 
             arr[index] = item;
@@ -109,11 +110,25 @@ namespace List
 
         public void RemoveAt(int index)
         {
-            int newCount = Count - 1;
-            int[] arr = new int[newCount];
-            Array.Copy(array, 0, arr, 0, index);
-            Array.Copy(array, index + 1, arr, index, newCount - index);
-            array = arr;
+            int newCount = this.Count - 1;
+
+            if ((index >= Count) || (index < 0)) // if index=count=0 (empty array) or if index is negative
+            {
+                throw new ListIndexOutOfRangeException("The selected index is out of the list range");
+            }
+            else if (index == Count - 1) // if element to be removed is last element in the list
+            {
+                int[] arr = new int[newCount];
+                Array.Copy(array, 0, arr, 0, newCount);
+                array = arr;
+            }
+            else // if element to be removed isnt the last element in the list
+            {
+                int[] arr = new int[newCount];
+                Array.Copy(array, 0, arr, 0, index);
+                Array.Copy(array, index + 1, arr, index, newCount - index);
+                array = arr;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

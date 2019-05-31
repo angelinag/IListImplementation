@@ -1,3 +1,3 @@
-# kodar
+# IList Implementation
 
-Full portfolio of my task/project files during .NET internship with Kodar OOD.
+Implementation of IList. Includes unit testing and a custom exception.

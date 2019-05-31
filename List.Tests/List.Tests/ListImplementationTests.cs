@@ -9,9 +9,7 @@ namespace List.Tests
 {
     public class ListImplementationTests
     {
-        // fix naming convention
-
-        public ListImplementation getNewList(int[] arr = null)
+        public ListImplementation GetNewList(int[] arr = null)
         {
             arr = arr ?? new int[1] { 1 };
             ListImplementation list = new ListImplementation();
@@ -22,24 +20,15 @@ namespace List.Tests
             return list;
         }
 
-        [Fact]
-        public void sets()
-        {
-            ListImplementation list = getNewList();
-            list[0] = 5;
-            list[0] = 1984;
-            Assert.True(true);
-        }
-
         [Theory]
         [InlineData(new int[] { 3 })]
         [InlineData(new int[] { 0 })]
         [InlineData(new int[] { -1, 0, 2, 4, 6 })]
         [InlineData(new int[] { int.MinValue })]
         [InlineData(new int[] { int.MaxValue })]
-        public void addsItems(int[] arr)
+        public void Add_AddProperItems_AddSuccess(int[] arr)
         {
-            ListImplementation list = getNewList();
+            ListImplementation list = GetNewList();
             foreach (int element in arr)
             {
                 list.Add(element);
@@ -54,12 +43,19 @@ namespace List.Tests
         [Theory]
         [InlineData(new int[] { 3 })]
         [InlineData(new int[] { 0 })]
-        public void clears(int[] arr) //clear na empty list? + add inline data
+        [InlineData(new int[] { -1, 5, 7, 9 })]
+        public void Clear_HasSomeData_ClearSuccess(int[] arr)
         {
-            //Arrange
-            //Act
-            //Assert
-            ListImplementation list = getNewList(arr);
+            ListImplementation list = GetNewList(arr);
+            list.Clear();
+            Assert.Empty(list);
+        }
+
+        [Fact]
+        public void Clear_IsEmptyList_DoesNotThrowException()
+        {
+            int[] arr = new int[] { };
+            ListImplementation list = GetNewList(arr);
             list.Clear();
             Assert.Empty(list);
         }
@@ -70,7 +66,7 @@ namespace List.Tests
         [InlineData(-1)]
         [InlineData(int.MinValue)]
         [InlineData(int.MaxValue)]
-        public void containsTrue(int a)
+        public void Contains_HasTheItems_ReturnsTrue(int a)
         {
             ListImplementation list1 = new ListImplementation { a };
             bool result1 = list1.Contains(a);
@@ -83,7 +79,7 @@ namespace List.Tests
         [InlineData(-1)]
         [InlineData(int.MinValue)]
         [InlineData(int.MaxValue)]
-        public void containsFalse(int a)
+        public void Contains_DoesNotContain_ReturnsFalse(int a)
         {
             ListImplementation list2 = new ListImplementation { };
             bool result2 = list2.Contains(a);
@@ -94,46 +90,68 @@ namespace List.Tests
         [InlineData(3, new int[] { 1, 2, 3 })]
         [InlineData(1, new int[] { int.MinValue })]
         [InlineData(1, new int[] { int.MaxValue })]
-        public void copiesTo(int n, int[] arr)
+        public void CopyTo_ArrayLengthEqualsListLength_CopySuccess(int n, int[] arr)
         {
-            // Setting up the list and filling it up with data
             ListImplementation list = new ListImplementation { };
             foreach (int a in arr)
             {
                 list.Add(a);
             }
 
-            // Test case 1 - array length == list length
-            int[] array1 = new int[n];
-            list.CopyTo(array1, 0);
+            int[] array = new int[n];
+            list.CopyTo(array, 0);
             for (int i = 0; i < n; i++)
             {
-                Assert.Equal(array1[i], list[i]);
+                Assert.Equal(array[i], list[i]);
+            }
+        }
+
+        [Theory]
+        [InlineData(3, new int[] { 1, 2, 3 })]
+        [InlineData(1, new int[] { int.MinValue })]
+        [InlineData(1, new int[] { int.MaxValue })]
+        public void CopyTo_ArrayLengthGreaterThanListLength_CopySuccess(int n, int[] arr)
+        {
+            ListImplementation list = new ListImplementation { };
+            foreach (int a in arr)
+            {
+                list.Add(a);
             }
 
-            // Test case 2 - array length > list length
-            int[] array2 = new int[n + 10];
+            int[] array = new int[n + 10];
 
             Random random = new Random();
             int shift = random.Next(1, 9);
             int startingIndex = shift - 1;
 
-            list.CopyTo(array2, startingIndex);
+            list.CopyTo(array, startingIndex);
             for (int i = 0; i < n; i++)
             {
-                Assert.Equal(list[i], array2[i + startingIndex]);
+                Assert.Equal(list[i], array[i + startingIndex]);
+            }
+        }
+
+        [Theory]
+        [InlineData(3, new int[] { 1, 2, 3 })]
+        [InlineData(1, new int[] { int.MinValue })]
+        [InlineData(1, new int[] { int.MaxValue })]
+        public void CopyTo_ArrayShorterThanList_ThrowException(int n, int[] arr)
+        {
+            ListImplementation list = new ListImplementation { };
+            foreach (int a in arr)
+            {
+                list.Add(a);
             }
 
-            // Test case 3 - array length < list length
-            int[] array3 = new int[n - 1];
+            int[] array = new int[n - 1];
 
-            Assert.Throws<IndexOutOfRangeException>(() => list.CopyTo(array3, 0));
+            Assert.Throws<ListIndexOutOfRangeException>(() => list.CopyTo(array, 0));
         }
 
         [Fact]
-        public void returnsEnumerator()
+        public void GetEnumerator_FunctionCalled_ReturnsEnumeratorType()
         {
-            ListImplementation list = new ListImplementation { 1, 2, 3 };
+            ListImplementation list = GetNewList();
 
             IEnumerator enumerator = list.GetEnumerator();
             // We can cast it as IEnumerator without exceptions, so it implements the interface properly.
@@ -141,39 +159,62 @@ namespace List.Tests
             Assert.True(true);
         }
 
-        [Fact]
-        public void returnsIndexOf()
+        [Theory]
+        [InlineData(new int[] { 5, 3, 2, 7, 9, 4, 6 })]
+        public void IndexOf_HasTheItem_ReturnsIndexOfItem(int[] arr)
         {
-            ListImplementation list = new ListImplementation { 5, 3, 2, 7, 9, 4, 6 };
+            ListImplementation list = GetNewList(arr);
             int i = 0;
-            foreach (int number in list)
+            foreach (int number in list) //checks 1 by 1
             {
                 Assert.Equal(i, list.IndexOf(number));
                 i++;
             }
-            Assert.Equal(3, list.IndexOf(7));
-            Assert.Throws<IndexOutOfRangeException>(() => list.IndexOf(1283745));
+            Assert.Equal(3, list.IndexOf(7)); // checks random item
+            Assert.Equal(5, list.IndexOf(4)); // checks random item
+        }
+
+        [Theory]
+        [InlineData(new int[] { 5, 3, 2, 7, 9, 4, 6 })]
+        public void IndexOf_DoesNotContainTheItem_ThrowsException(int[] arr)
+        {
+            ListImplementation list = GetNewList(arr);
+            Assert.Throws<ListIndexOutOfRangeException>(() => list.IndexOf(1283745));
+            Assert.Throws<ListIndexOutOfRangeException>(() => list.IndexOf(int.MinValue));
+            Assert.Throws<ListIndexOutOfRangeException>(() => list.IndexOf(int.MaxValue));
+            Assert.Throws<ListIndexOutOfRangeException>(() => list.IndexOf(0));
         }
 
         [Theory]
         [InlineData(4, 10)]
         [InlineData(5, 6)]
         [InlineData(2, 2)]
-        public void inserts(int a, int b)
+        public void Insert_IndexIsInRange_InsertSuccess(int a, int b)
         {
-            ListImplementation list = new ListImplementation { 5, 3, 2, 7, 9, 4, 6 };
+            int[] arr = new int[] { 5, 3, 2, 7, 9, 4, 6 };
+            ListImplementation list = GetNewList(arr);
 
             list.Insert(a, b);
             Assert.Equal(b, list[a]);
-
-            Assert.Throws<IndexOutOfRangeException>(() => list.Insert(657483920, b));
         }
 
-        [Theory] // length ? exception
-        [InlineData(7, new int[] { 5, 3, 2, 7, 9, 4, 6 })]  // pass array + element_to_del as inline data
-        public void removes(int n, int[] arr)
+        [Theory]
+        [InlineData(657483920, 10)]
+        [InlineData(657483920, 6)]
+        [InlineData(int.MaxValue, 2)]
+        public void Insert_IndexIsOutOfRange_ThrowException(int a, int b)
         {
-            ListImplementation list = getNewList(arr);
+            int[] arr = new int[] { 5, 3, 2, 7, 9, 4, 6 };
+            ListImplementation list = GetNewList(arr);
+
+            Assert.Throws<ListIndexOutOfRangeException>(() => list.Insert(a, b));
+        }
+
+        [Theory]
+        [InlineData(7, new int[] { 5, 3, 2, 7, 9, 4, 6 })]
+        public void Remove_GenerateRandomIndexInRange_RemoveSuccess(int n, int[] arr)
+        {
+            ListImplementation list = GetNewList(arr);
             for (int i = n; i > 0; i--)
             {
                 Random random = new Random();
@@ -183,26 +224,35 @@ namespace List.Tests
             }
         }
 
-        [Theory] // length ? exception
-        [InlineData(7, new int[] { 5, 3, 2, 7, 9, 4, 6 })]
-        public void removesAt(int n, int[] arr)
+        [Theory]
+        [InlineData(new int[] { 5, 3, 2, 7, 9, 4, 6 })]
+        [InlineData(new int[] { 7543829, int.MinValue, 5328, -11, int.MaxValue })]
+        [InlineData(new int[] { })]
+        public void Remove_DoesNotContainItem_ReturnsFalse(int[] arr)
         {
-            ListImplementation list = getNewList(arr);
+            ListImplementation list = GetNewList(arr);
+            Assert.False(list.Remove(-1));
+        }
+
+        [Theory]
+        [InlineData(7, new int[] { 5, 3, 2, 7, 9, 4, 6 })]
+        public void RemoveAt_GeneratesRandomIndex_RemovesItemOrThrowsException(int n, int[] arr)
+        {
+            ListImplementation list = GetNewList(arr);
             for (int i = n; i > 0; i--)
             {
                 Random random = new Random();
                 int index = random.Next(0, i);
-                if(index < i-1)
+                if (index < i - 1)
                 {
                     int nextNumber = list[index + 1];
                     list.RemoveAt(index);
                     Assert.Equal(nextNumber, list[index]);
-                    
                 }
                 else
                 {
                     list.RemoveAt(index);
-                    Assert.Throws<Exception>(() => list.RemoveAt(index));
+                    Assert.Throws<ListIndexOutOfRangeException>(() => list.RemoveAt(index));
                 }
             }
         }
