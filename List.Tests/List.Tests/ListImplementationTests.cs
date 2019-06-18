@@ -20,8 +20,58 @@ namespace List.Tests
             return list;
         }
 
+        [Theory]
+        [InlineData(5, new int[] { -5, -24567, -7777, 99, 239345 })]
+        [InlineData(3, new int[] { 1, 2, 3 })]
+        [InlineData(1, new int[] { int.MinValue })]
+        [InlineData(1, new int[] { int.MaxValue })]
+        public void Count_IsGivenASpecificCount_CountIsCorrect(int count, int[] arr)
+        {
+            ListImplementation<int> list = new ListImplementation<int> { };
+            foreach (int a in arr)
+            {
+                list.Add(a);
+            }
+            Assert.Equal(count, list.Count);
+        }
 
+        [Fact]
+        public void ListImplementation_HasNoItems_IsEmpty()
+        {
+            ListImplementation<int> list = new ListImplementation<int> { };
+            Assert.Empty(list);
+        }
 
+        [Fact]
+        public void Count_ReceivesEmptyList_CountIsZero()
+        {
+            ListImplementation<int> list = new ListImplementation<int> { };
+            int expectedCount = 0;
+            Assert.Equal(expectedCount, list.Count);
+        }
+
+        [Theory]
+        [InlineData(0, new int[] { -5, -24567, -7777, 99, 239345 })]
+        [InlineData(2, new int[] { 1, 2, 3 })]
+        [InlineData(88, new int[] { int.MinValue })]
+        [InlineData(9999, new int[] { int.MaxValue })]
+        public void Count_IsGivenAWrongCount_CountIsDifferent(int count, int[] arr)
+        {
+            ListImplementation<int> list = new ListImplementation<int> { };
+            foreach (int a in arr)
+            {
+                list.Add(a);
+            }
+            Assert.NotEqual(count, list.Count);
+        }
+
+        [Fact]
+        public void IsReadOnly_ReceivesStandartList_ReturnsIsReadOnlyfalse()
+        {
+            ListImplementation<int> list = GetNewList();
+            Assert.False(list.IsReadOnly);
+        }
+        
         [Theory]
         [InlineData(new int[] { 3 })]
         [InlineData(new int[] { 0 })]
