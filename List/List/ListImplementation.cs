@@ -5,20 +5,22 @@ using System.Text;
 
 namespace List
 {
-    public class ListImplementation : IList<int>
+    public class ListImplementation<T> : IList<T>
     {
-        private int[] array;
+        private T[] array;
 
         public ListImplementation()
         {
-            this.array = new int[0] { };
+            this.array = new T[0] { };
         }
 
-        public int this[int index]
+        public T this[int index]
         {
             get
             {
-                return (array == null) || (index < 0) || (index >= this.array.Length) ? -1 : array[index];
+                if ((array == null) || (index < 0) || (index >= this.array.Length))
+                    throw new ListIndexOutOfRangeException("The selected index is out of the list range");
+                return array[index];
             }
             set
             {
@@ -31,15 +33,15 @@ namespace List
 
         public bool IsReadOnly => false;
 
-        public void Add(int item)
+        public void Add(T item)
         {
             if (Count == 0)
             {
-                array = new int[1] { item };
+                array = new T[1] { item };
             }
             else
             {
-                int[] arr = new int[Count + 1];
+                T[] arr = new T[Count + 1];
 
                 Array.Copy(array, 0, arr, 0, Count);
                 arr[Count] = item;
@@ -50,41 +52,41 @@ namespace List
 
         public void Clear()
         {
-            array = new int[] { };
+            array = new T[] { };
         }
 
-        public bool Contains(int item)
+        public bool Contains(T item)
         {
             for (int i = 0; i < Count; i++)
             {
-                if (array[i] == item) return true;
+                if (array[i].Equals(item)) return true;
             }
             return false;
         }
 
-        public void CopyTo(int[] array, int arrayIndex)
+        public void CopyTo(T[] array, int arrayIndex)
         {
             if ((array.Length - arrayIndex < this.array.Length) || (arrayIndex < 0))
                 throw new ListIndexOutOfRangeException("The selected index is out of the list range");
             Array.Copy(this.array, 0, array, arrayIndex, this.array.Length);
         }
 
-        public IEnumerator<int> GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
-            return new ListImplementationEnum(array) as IEnumerator<int>;
+            return new ListImplementationEnum<T>(array) as IEnumerator<T>;
         }
 
-        public int IndexOf(int item)
+        public int IndexOf(T item)
         {
             if (!this.Contains(item))
                 throw new ListIndexOutOfRangeException("The selected index is out of the list range");
             return Array.IndexOf(array, item);
         }
 
-        public void Insert(int index, int item)
+        public void Insert(int index, T item)
         {
             int newCount = Count + 1;
-            int[] arr = new int[newCount];
+            T[] arr = new T[newCount];
 
             if ((index > this.array.Length) || (index < 0)) throw new ListIndexOutOfRangeException("The selected index is out of the list range");
             Array.Copy(this.array, 0, arr, 0, index);
@@ -97,7 +99,7 @@ namespace List
             array = arr;
         }
 
-        public bool Remove(int item)
+        public bool Remove(T item)
         {
             if (!this.Contains(item)) return false;
 
@@ -118,13 +120,13 @@ namespace List
             }
             else if (index == Count - 1) // if element to be removed is last element in the list
             {
-                int[] arr = new int[newCount];
+                T[] arr = new T[newCount];
                 Array.Copy(array, 0, arr, 0, newCount);
                 array = arr;
             }
             else // if element to be removed isnt the last element in the list
             {
-                int[] arr = new int[newCount];
+                T[] arr = new T[newCount];
                 Array.Copy(array, 0, arr, 0, index);
                 Array.Copy(array, index + 1, arr, index, newCount - index);
                 array = arr;

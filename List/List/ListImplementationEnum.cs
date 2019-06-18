@@ -5,13 +5,13 @@ using System.Text;
 
 namespace List
 {
-    class ListImplementationEnum : IEnumerator<int>
+    class ListImplementationEnum<T> : IEnumerator<T>
     {
-        private int[] array;
+        private T[] array;
 
         int position = -1;
 
-        public ListImplementationEnum(int[] arr)
+        public ListImplementationEnum(T[] arr)
         {
             array = arr;
         }
@@ -39,7 +39,7 @@ namespace List
             }
         }
 
-        public int Current
+        public T Current
         {
             get
             {
@@ -53,5 +53,6 @@ namespace List
                 }
             }
         }
+        
     }
 }

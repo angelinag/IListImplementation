@@ -9,10 +9,10 @@ namespace List.Tests
 {
     public class ListImplementationTests
     {
-        public ListImplementation GetNewList(int[] arr = null)
+        public ListImplementation<int> GetNewList(int[] arr = null)
         {
             arr = arr ?? new int[1] { 1 };
-            ListImplementation list = new ListImplementation();
+            ListImplementation<int> list = new ListImplementation<int>();
             foreach (int n in arr)
             {
                 list.Add(n);
@@ -28,7 +28,7 @@ namespace List.Tests
         [InlineData(new int[] { int.MaxValue })]
         public void Add_AddProperItems_AddSuccess(int[] arr)
         {
-            ListImplementation list = GetNewList();
+            ListImplementation<int> list = GetNewList();
             foreach (int element in arr)
             {
                 list.Add(element);
@@ -46,7 +46,7 @@ namespace List.Tests
         [InlineData(new int[] { -1, 5, 7, 9 })]
         public void Clear_HasSomeData_ClearSuccess(int[] arr)
         {
-            ListImplementation list = GetNewList(arr);
+            ListImplementation<int> list = GetNewList(arr);
             list.Clear();
             Assert.Empty(list);
         }
@@ -55,7 +55,7 @@ namespace List.Tests
         public void Clear_IsEmptyList_DoesNotThrowException()
         {
             int[] arr = new int[] { };
-            ListImplementation list = GetNewList(arr);
+            ListImplementation<int> list = GetNewList(arr);
             list.Clear();
             Assert.Empty(list);
         }
@@ -68,7 +68,7 @@ namespace List.Tests
         [InlineData(int.MaxValue)]
         public void Contains_HasTheItems_ReturnsTrue(int a)
         {
-            ListImplementation list1 = new ListImplementation { a };
+            ListImplementation<int> list1 = new ListImplementation<int> { a };
             bool result1 = list1.Contains(a);
             Assert.True(result1);
         }
@@ -81,7 +81,7 @@ namespace List.Tests
         [InlineData(int.MaxValue)]
         public void Contains_DoesNotContain_ReturnsFalse(int a)
         {
-            ListImplementation list2 = new ListImplementation { };
+            ListImplementation<int> list2 = new ListImplementation<int> { };
             bool result2 = list2.Contains(a);
             Assert.False(result2);
         }
@@ -92,7 +92,7 @@ namespace List.Tests
         [InlineData(1, new int[] { int.MaxValue })]
         public void CopyTo_ArrayLengthEqualsListLength_CopySuccess(int n, int[] arr)
         {
-            ListImplementation list = new ListImplementation { };
+            ListImplementation<int> list = new ListImplementation<int> { };
             foreach (int a in arr)
             {
                 list.Add(a);
@@ -112,7 +112,7 @@ namespace List.Tests
         [InlineData(1, new int[] { int.MaxValue })]
         public void CopyTo_ArrayLengthGreaterThanListLength_CopySuccess(int n, int[] arr)
         {
-            ListImplementation list = new ListImplementation { };
+            ListImplementation<int> list = new ListImplementation<int> { };
             foreach (int a in arr)
             {
                 list.Add(a);
@@ -137,7 +137,7 @@ namespace List.Tests
         [InlineData(1, new int[] { int.MaxValue })]
         public void CopyTo_ArrayShorterThanList_ThrowException(int n, int[] arr)
         {
-            ListImplementation list = new ListImplementation { };
+            ListImplementation<int> list = new ListImplementation<int> { };
             foreach (int a in arr)
             {
                 list.Add(a);
@@ -151,7 +151,7 @@ namespace List.Tests
         [Fact]
         public void GetEnumerator_FunctionCalled_ReturnsEnumeratorType()
         {
-            ListImplementation list = GetNewList();
+            ListImplementation<int> list = GetNewList();
 
             IEnumerator enumerator = list.GetEnumerator();
             // We can cast it as IEnumerator without exceptions, so it implements the interface properly.
@@ -163,7 +163,7 @@ namespace List.Tests
         [InlineData(new int[] { 5, 3, 2, 7, 9, 4, 6 })]
         public void IndexOf_HasTheItem_ReturnsIndexOfItem(int[] arr)
         {
-            ListImplementation list = GetNewList(arr);
+            ListImplementation<int> list = GetNewList(arr);
             int i = 0;
             foreach (int number in list) //checks 1 by 1
             {
@@ -178,7 +178,7 @@ namespace List.Tests
         [InlineData(new int[] { 5, 3, 2, 7, 9, 4, 6 })]
         public void IndexOf_DoesNotContainTheItem_ThrowsException(int[] arr)
         {
-            ListImplementation list = GetNewList(arr);
+            ListImplementation<int> list = GetNewList(arr);
             Assert.Throws<ListIndexOutOfRangeException>(() => list.IndexOf(1283745));
             Assert.Throws<ListIndexOutOfRangeException>(() => list.IndexOf(int.MinValue));
             Assert.Throws<ListIndexOutOfRangeException>(() => list.IndexOf(int.MaxValue));
@@ -192,7 +192,7 @@ namespace List.Tests
         public void Insert_IndexIsInRange_InsertSuccess(int a, int b)
         {
             int[] arr = new int[] { 5, 3, 2, 7, 9, 4, 6 };
-            ListImplementation list = GetNewList(arr);
+            ListImplementation<int> list = GetNewList(arr);
 
             list.Insert(a, b);
             Assert.Equal(b, list[a]);
@@ -205,7 +205,7 @@ namespace List.Tests
         public void Insert_IndexIsOutOfRange_ThrowException(int a, int b)
         {
             int[] arr = new int[] { 5, 3, 2, 7, 9, 4, 6 };
-            ListImplementation list = GetNewList(arr);
+            ListImplementation<int> list = GetNewList(arr);
 
             Assert.Throws<ListIndexOutOfRangeException>(() => list.Insert(a, b));
         }
@@ -214,7 +214,7 @@ namespace List.Tests
         [InlineData(7, new int[] { 5, 3, 2, 7, 9, 4, 6 })]
         public void Remove_GenerateRandomIndexInRange_RemoveSuccess(int n, int[] arr)
         {
-            ListImplementation list = GetNewList(arr);
+            ListImplementation<int> list = GetNewList(arr);
             for (int i = n; i > 0; i--)
             {
                 Random random = new Random();
@@ -230,7 +230,7 @@ namespace List.Tests
         [InlineData(new int[] { })]
         public void Remove_DoesNotContainItem_ReturnsFalse(int[] arr)
         {
-            ListImplementation list = GetNewList(arr);
+            ListImplementation<int> list = GetNewList(arr);
             Assert.False(list.Remove(-1));
         }
 
@@ -238,7 +238,7 @@ namespace List.Tests
         [InlineData(7, new int[] { 5, 3, 2, 7, 9, 4, 6 })]
         public void RemoveAt_GeneratesRandomIndex_RemovesItemOrThrowsException(int n, int[] arr)
         {
-            ListImplementation list = GetNewList(arr);
+            ListImplementation<int> list = GetNewList(arr);
             for (int i = n; i > 0; i--)
             {
                 Random random = new Random();
