@@ -236,7 +236,7 @@ namespace List.Tests
 
         [Theory]
         [InlineData(7, new int[] { 5, 3, 2, 7, 9, 4, 6 })]
-        public void RemoveAt_GeneratesRandomIndex_RemovesItemOrThrowsException(int n, int[] arr)
+        public void RemoveAt_GeneratesRandomIndex_RemovesItem(int n, int[] arr)
         {
             ListImplementation<int> list = GetNewList(arr);
             for (int i = n; i > 0; i--)
@@ -251,9 +251,20 @@ namespace List.Tests
                 }
                 else
                 {
-                    list.RemoveAt(index);
-                    Assert.Throws<ListIndexOutOfRangeException>(() => list.RemoveAt(index));
+                    continue;
                 }
+            }
+        }
+
+        [Theory]
+        [InlineData(7, new int[] { 5, 3, 2, 7, 9, 4, 6 })]
+        public void RemoveAt_GeneratesRandomIndex_ThrowsException(int n, int[] arr)
+        {
+            ListImplementation<int> list = GetNewList(arr);
+            for (int i = n; i > 0; i--)
+            {
+                list.RemoveAt(i - 1);
+                Assert.Throws<ListIndexOutOfRangeException>(() => list.RemoveAt(i - 1));
             }
         }
     }
