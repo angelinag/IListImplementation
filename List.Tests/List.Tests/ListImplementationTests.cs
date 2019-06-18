@@ -20,6 +20,8 @@ namespace List.Tests
             return list;
         }
 
+
+
         [Theory]
         [InlineData(new int[] { 3 })]
         [InlineData(new int[] { 0 })]
@@ -258,7 +260,7 @@ namespace List.Tests
 
         [Theory]
         [InlineData(7, new int[] { 5, 3, 2, 7, 9, 4, 6 })]
-        public void RemoveAt_GeneratesRandomIndex_ThrowsException(int n, int[] arr)
+        public void RemoveAt_RemovesLastItemTwice_ThrowsException(int n, int[] arr)
         {
             ListImplementation<int> list = GetNewList(arr);
             for (int i = n; i > 0; i--)
